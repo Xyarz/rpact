@@ -37,19 +37,19 @@ test_that(".getTrialDesignPlanTheta function works as expected", {
 # Test case for .plotTrialDesignPlan function
 test_that(".plotTrialDesignPlan function works as expected", {
   designPlan <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                                              0.025, beta = 0.2, sided = 1, tolerance = 1e-08)%>%
+                                                              0.025, beta = 0.2, sided = 1, tolerance = 1e-08)|>
                                        getSampleSizeMeans(meanRatio = FALSE, thetaH0 = 0,
                                                           normalApproximation = FALSE, alternative = 0.2, stDev = 1, groups =
                                                             2, allocationRatioPlanned = 1)
   designPlan_power <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) %>%
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
     getPowerMeans(meanRatio = FALSE, thetaH0 = 0, normalApproximation =
                     FALSE, alternative = 0.2, stDev = 1, groups = 2,
                   allocationRatioPlanned = 1, directionUpper = TRUE,
                   maxNumberOfSubjects = 200)
   
   designPlan_surv <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) %>%
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
     getSampleSizeSurvival(thetaH0 = 1, typeOfComputation =
                             "Schoenfeld", pi1 = 0.4, pi2 = 0.2, allocationRatioPlanned = 1,
                           eventTime = 12, accrualTime = c(0, 12), kappa = 1, followUpTime =
@@ -57,21 +57,28 @@ test_that(".plotTrialDesignPlan function works as expected", {
                           accrualIntensity = NA_real_)
   
   designPlan_surv_pwr <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                                   0.025, beta = 0.2, sided = 1, tolerance = 1e-08) %>%
+                                                   0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
     getPowerSurvival(thetaH0 = 1, typeOfComputation = "Schoenfeld",
                      directionUpper = TRUE, pi1 = 0.4, pi2 = 0.2, maxNumberOfSubjects =
                        200, maxNumberOfEvents = 100, allocationRatioPlanned = 1, eventTime
                      = 12, accrualTime = c(0, 12), kappa = 1, dropoutRate1 = 0,
                      dropoutRate2 = 0, dropoutTime = 12, accrualIntensity = NA_real_)
   designPlan_rates <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) %>%
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
     getSampleSizeRates(riskRatio = FALSE, thetaH0 = 0,
                       pi1 = 0.4, pi2 = 0.2, groups = 2,
                        allocationRatioPlanned = 1)
   designPlan_rates_pwr <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) %>%
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
     getPowerRates(riskRatio = FALSE, thetaH0 = 0,  pi1 = 0.4, pi2 = 0.2, groups = 2, allocationRatioPlanned = 1,
                   directionUpper = TRUE, maxNumberOfSubjects = 200)
+  
+  designPlan_2 <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
+                                         0.025, beta = 0.2, sided = 1, tolerance = 1e-08)|>
+    getSampleSizeMeans(meanRatio = FALSE, thetaH0 = 0,
+                       normalApproximation = FALSE, alternative = 0.2, stDev = 1, groups =
+                         2, allocationRatioPlanned = 1)
+  designPlan_2$`.design`$sided <- as.integer(1)
   type <- c(1:4)
   main <- NA_character_
   xlab <- NA_character_
@@ -85,12 +92,14 @@ test_that(".plotTrialDesignPlan function works as expected", {
   plotSettings <- NULL
   for(i in type) {
     result <- .plotTrialDesignPlan(designPlan, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
+    result_2 <- .plotTrialDesignPlan(designPlan_2, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     result_pwr <- .plotTrialDesignPlan(designPlan_power, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     result_surv <- .plotTrialDesignPlan(designPlan_surv, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     result_surv_pwr <- .plotTrialDesignPlan(designPlan_surv_pwr, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     result_rates <- .plotTrialDesignPlan(designPlan_rates, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     result_rates_pwr <- .plotTrialDesignPlan(designPlan_rates_pwr, type[i], main, xlab, ylab, palette, theta, plotPointsEnabled, legendPosition, showSource, designPlanName, plotSettings)
     expect_type(result, "list")
+    expect_type(result_2, "list")
     expect_type(result_pwr, "list")
     expect_type(result_surv, "list")
     expect_type(result_surv_pwr, "list")
