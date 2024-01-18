@@ -397,3 +397,4 @@ test_that(".getOptionBasedFormattedValue returns NULL for unknown option key", {
     # Expect NULL as the result
     expect_null(result)
 })
+

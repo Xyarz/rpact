@@ -119,3 +119,21 @@ test_that(".plotTrialDesignPlan function works as expected", {
   expect_error(.warnInCaseOfUnusedValuesForPlotting())
 })
 
+test_that(".getSurvivalFunctionPlotCommand works as intended", {
+  expect_error(.getSurvivalFunctionPlotCommand())
+})
+
+test_that(".plotSurvivalFunction works as intended", {
+  expect_error(.plotSurvivalFunction())
+})
+
+test_that("warnings works as intended", {
+  expect_error(.warnInCaseOfUnusedValuesForPlottingMeans())
+  expect_error(.warnInCaseOfUnusedValuesForPlottingRates())
+  expect_error(.warnInCaseOfUnusedValuesForPlottingSurvival())
+  expect_error(.warnInCaseOfUnusedValuesForPlotting())
+})
+
+test_that("plot.TrialDesignPlan works as intended", {
+  expect_error(plot.TrialDesignPlan())
+})
