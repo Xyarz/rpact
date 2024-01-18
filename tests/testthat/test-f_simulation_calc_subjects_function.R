@@ -32,3 +32,34 @@ test_that(".isCppCode ", {
     expect_true(is.function(.isCppCode))
     expect_true(!.isCppCode(NULL))
 })
+
+test_that(".getCalcSubjectsFunctionRCode", {
+    C_SIMULATION_CALC_SUBJECTS_FUNCTION_BASE_SURVIVAL_ARGUMENTS <- list()
+    expect_error(.getCalcSubjectsFunctionRCode())
+    expect_error(.getCalcSubjectsFunctionRCode("thetaH0\nthetaH0", "C_SIMULATION_CALC_SUBJECTS_FUNCTION_BASE_SURVIVAL_ARGUMENTS"))
+})
+
+test_that(".getCalcSubjectsFunctionCppCode", {
+    expect_error(.getCalcSubjectsFunctionCppCode())
+    expect_error(.getCalcSubjectsFunctionCppCode("thetaH0\nthetaH0", "C_SIMULATION_CALC_SUBJECTS_FUNCTION_CPP_CODE"))
+})
+
+test_that(".getCalcSubjectsFunction", {
+    expect_error(.getCalcSubjectsFunction())
+    # means
+    maxNumberOfSubjects <- 90
+    informationRates <- c(0.2, 0.5, 1)
+    plannedSubjects <- round(informationRates * maxNumberOfSubjects)
+    design <- getDesignInverseNormal(
+        futilityBounds = c(-0.5, 0.5),
+        informationRates = informationRates
+    )
+    x_means <- getSimulationMeans(
+        design = design, groups = 2, meanRatio = TRUE,
+        thetaH0 = 0.4, plannedSubjects = plannedSubjects,
+        maxNumberOfIterations = 500, allocationRatioPlanned = 3,
+        stDev = 1.5, seed = 1234567890
+    )
+    expect_error(.getCalcSubjectsFunction(design = design, simulationResults = x_means, calcFunction = 45, expectedFunction = "getSimulationSurvivalStageEventsTemp", cppEnabled = TRUE))
+    expect_error(.getCalcSubjectsFunction(design = design, simulationResults = x_means, calcFunction = "calcEventsFunctionSurvivalPtrTemp", expectedFunction = "calcEventsFunctionCppTemp", cppEnabled = TRUE))
+})

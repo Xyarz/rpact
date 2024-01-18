@@ -55,6 +55,14 @@ test_that("'.formatPValues'", {
 
     ## Comparison of the results of character object 'x' with expected results
     expect_equal(x, c("<0.0001", "<0.0001", "<0.0001", "NA"), label = paste0("c(", paste0(x, collapse = ", "), ")"))
+    
+    value <-  4.2323
+    digits <- 3
+    expect_silent(.getFormattedValue(value = value, digits = digits, roundFunction = "ceiling"))
+    expect_silent(.getFormattedValue(value = value, digits = digits, roundFunction = "floor"))
+    expect_silent(.getFormattedValue(value = value, digits = digits, roundFunction = "trunc"))
+    expect_silent(.getFormattedValue(value = value, digits = digits, roundFunction = "round"))
+    expect_silent(.getFormattedValue(value = value, digits = digits, roundFunction = "signif"))
 })
 
 test_that("'.formatRepeatedPValues'", {
@@ -159,6 +167,14 @@ test_that(".assertIsValidOutputFormatOptionValue handles invalid empty option va
 
     # Expect an error message
     expect_match(result, "")
+})
+
+test_that("setOutputFormat function", {
+    expect_error(setOutputFormat(file = "dummy.R"))
+    expect_silent(setOutputFormat(digits = 4))
+    expect_error(setOutputFormat(parameterName  = "dummy"))
+    expect_silent(setOutputFormat(nsmall   = 3))
+    expect_silent(setOutputFormat(roundFunction = "round"))
 })
 
 test_that(".getOutputFormatFunctionName returns correct function name for key 'rpact.output.format.p.value'", {
