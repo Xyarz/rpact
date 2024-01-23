@@ -1,4 +1,8 @@
 designGS1 <- getDesignGroupSequential(informationRates = c(0.2, 0.5, 1), sided = 1, beta = 0.1, typeOfDesign = "WT", deltaWT = 0.3)
+survivalDesignPlanEnabled <- .isTrialDesignPlanSurvival(getDesignGroupSequential(
+  informationRates = c(0.2, 0.5, 1), sided = 1,
+  beta = 0.1, typeOfDesign = "WT", deltaWT = 0.3
+))
 
 test_that(".addPlotSubTitleItems function works as expected", {
   designPlan <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
@@ -37,45 +41,47 @@ test_that(".getTrialDesignPlanTheta function works as expected", {
 # Test case for .plotTrialDesignPlan function
 test_that(".plotTrialDesignPlan function works as expected", {
   designPlan <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                                              0.025, beta = 0.2, sided = 1, tolerance = 1e-08)|>
-                                       getSampleSizeMeans(meanRatio = FALSE, thetaH0 = 0,
+                                                              0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan <- getSampleSizeMeans(designPlan, meanRatio = FALSE, thetaH0 = 0,
                                                           normalApproximation = FALSE, alternative = 0.2, stDev = 1, groups =
                                                             2, allocationRatioPlanned = 1)
+  
   designPlan_power <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
-    getPowerMeans(meanRatio = FALSE, thetaH0 = 0, normalApproximation =
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_power <- getPowerMeans(designPlan_power, meanRatio = FALSE, thetaH0 = 0, normalApproximation =
                     FALSE, alternative = 0.2, stDev = 1, groups = 2,
                   allocationRatioPlanned = 1, directionUpper = TRUE,
                   maxNumberOfSubjects = 200)
   
   designPlan_surv <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
-    getSampleSizeSurvival(thetaH0 = 1, typeOfComputation =
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_surv <- getSampleSizeSurvival(designPlan_surv, thetaH0 = 1, typeOfComputation =
                             "Schoenfeld", pi1 = 0.4, pi2 = 0.2, allocationRatioPlanned = 1,
                           eventTime = 12, accrualTime = c(0, 12), kappa = 1, followUpTime =
                             6, dropoutRate1 = 0, dropoutRate2 = 0, dropoutTime = 12,
                           accrualIntensity = NA_real_)
   
   designPlan_surv_pwr <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                                   0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
-    getPowerSurvival(thetaH0 = 1, typeOfComputation = "Schoenfeld",
+                                                   0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_surv_pwr <- getPowerSurvival(designPlan_surv_pwr, thetaH0 = 1, typeOfComputation = "Schoenfeld",
                      directionUpper = TRUE, pi1 = 0.4, pi2 = 0.2, maxNumberOfSubjects =
                        200, maxNumberOfEvents = 100, allocationRatioPlanned = 1, eventTime
                      = 12, accrualTime = c(0, 12), kappa = 1, dropoutRate1 = 0,
                      dropoutRate2 = 0, dropoutTime = 12, accrualIntensity = NA_real_)
   designPlan_rates <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
-    getSampleSizeRates(riskRatio = FALSE, thetaH0 = 0,
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_rates <- getSampleSizeRates(designPlan_rates, riskRatio = FALSE, thetaH0 = 0,
                       pi1 = 0.4, pi2 = 0.2, groups = 2,
                        allocationRatioPlanned = 1)
   designPlan_rates_pwr <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08) |>
-    getPowerRates(riskRatio = FALSE, thetaH0 = 0,  pi1 = 0.4, pi2 = 0.2, groups = 2, allocationRatioPlanned = 1,
-                  directionUpper = TRUE, maxNumberOfSubjects = 200)
+                                               0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_rates_pwr <- getPowerRates(designPlan_rates_pwr, riskRatio = FALSE, thetaH0 = 0, 
+                                        pi1 = 0.4, pi2 = 0.2, groups = 2, allocationRatioPlanned = 1,
+                                        directionUpper = TRUE, maxNumberOfSubjects = 200)
   
   designPlan_2 <- getDesignInverseNormal(typeOfDesign = "OF", kMax = 2, alpha =
-                                         0.025, beta = 0.2, sided = 1, tolerance = 1e-08)|>
-    getSampleSizeMeans(meanRatio = FALSE, thetaH0 = 0,
+                                         0.025, beta = 0.2, sided = 1, tolerance = 1e-08)
+  designPlan_2 <- getSampleSizeMeans(designPlan_2, meanRatio = FALSE, thetaH0 = 0,
                        normalApproximation = FALSE, alternative = 0.2, stDev = 1, groups =
                          2, allocationRatioPlanned = 1)
   designPlan_2$`.design`$sided <- as.integer(1)
